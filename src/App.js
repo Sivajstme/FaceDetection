@@ -12,16 +12,27 @@ const particlesOption = {
       value : 70,
       density :{
         enable : true,
-        value_area : 800
+        value_area : 600
       }
     }
   }
-
 }
 
 class App extends Component {
 
+  constructor(){
+    super();
+    this.state = {
+      input : ''
+    }
+  }
 
+  onInputChange = (e) =>{
+    console.log(e.target.value);
+  }
+  onButtonSubmit = ()=>{
+    console.log('Click')
+  }
   render() {
     return(
       <div className="App">
@@ -30,7 +41,9 @@ class App extends Component {
         <Navigation />
         <Logo />
         <Rank />
-        <ImageLinkForm />
+        <ImageLinkForm 
+            onInputChange = {this.onInputChange} 
+            onButtonSubmit = {this.onButtonSubmit}/>
         {/* <FaceRecognition /> */}
       </div>
     )
