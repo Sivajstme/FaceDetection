@@ -30,83 +30,100 @@ const particlesOption = {
 }
 
 class App extends Component {
-
-  constructor(){
+  constructor() {
     super();
     this.state = {
-      input : '',
-      imageUrl : '',
-      box : {}
-    }
+      input: "",
+      imageUrl: "",
+      box: {},
+      route: "signin"
+    };
   }
 
-  calculateFaceLocation = (dataInput) => {
-    console.log('testes');
-    const clarifaiFace = dataInput.outputs[0].data.regions[0].region_info.bounding_box;
+  calculateFaceLocation = dataInput => {
+    console.log("testes");
+    const clarifaiFace =
+      dataInput.outputs[0].data.regions[0].region_info.bounding_box;
     //console.log(clarifaiFace);
     const img = document.getElementById("inputImage");
     //console.log(img)
     let width = Number(img.width);
     let height = Number(img.height);
     console.log(height, width); //Height = 441;
-                                //width = 500;
-  /**
+    //width = 500;
+    /**
     top_row: 0.15593769,
     left_col: 0.32949424,
     bottom_row: 0.6229454,
     right_col: 0.63938797 width -
    */
-  return {
-    left_col: width * clarifaiFace.left_col,
-    top_row: height * clarifaiFace.top_row,
-    right_col: width - clarifaiFace.right_col * width,
-    bottom_row: height - clarifaiFace.bottom_row * height
-  }
-  
-}
+    return {
+      left_col: width * clarifaiFace.left_col,
+      top_row: height * clarifaiFace.top_row,
+      right_col: width - clarifaiFace.right_col * width,
+      bottom_row: height - clarifaiFace.bottom_row * height
+    };
+  };
 
-  borderBox = (border) =>{
+  borderBox = border => {
     //console.log(border);
-    this.setState({box : border});
-  }
+    this.setState({ box: border });
+  };
 
-  onInputChange = (e) =>{
-    this.setState({input : e.target.value})
-  }
-  onButtonSubmit = () =>{
-    console.log('Click');
-    this.setState({imageUrl : this.state.input});
-    API.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
+  onInputChange = e => {
+    this.setState({ input: e.target.value });
+  };
+  onButtonSubmit = () => {
+    console.log("Click");
+    this.setState({ imageUrl: this.state.input });
+    API.models
+      .predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
       .then(response => this.borderBox(this.calculateFaceLocation(response)))
-              .catch(err => console.log(err));
-                  //console.log(response)  
-                  //console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-    
+      .catch(err => console.log(err));
+    //console.log(response)
+    //console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
+
     //return this.borderBox(this.calculateFaceLocation(response));
 
-        // top_row: 0.15593769,
-        // left_col: 0.32949424,
-        // bottom_row: 0.6229454,
-        // right_col: 0.63938797
-        
-              
+    // top_row: 0.15593769,
+    // left_col: 0.32949424,
+    // bottom_row: 0.6229454,
+    // right_col: 0.63938797
+  };
+  onRouteChange = () => {
+    this.setState({ route: "home" });
+  };
+  backToSignin = () =>{
+    this.setState({route : 'signin'});
   }
   render() {
-    return(
+    return (
       <div className="App">
-          <Particles className = 'particles'
-            params={particlesOption}/>
-        <Navigation />
-        <Signin />
+        <Particles className="particles" params={particlesOption} />
         <Logo />
-        <Rank />
-        <ImageLinkForm 
-            onInputChange = {this.onInputChange} 
-            onButtonSubmit = {this.onButtonSubmit}/>
-        <FaceRecognition imageBorder = {this.state.box} imageSource= {this.state.imageUrl}/>
+        {this.state.route !== "signin" ? (
+          <Navigation backToSignin={this.backToSignin} />
+        ) : (
+          <div></div>
+        )}
+        {this.state.route === "signin" ? (
+          <Signin onRouteChange={this.onRouteChange} />
+        ) : (
+          <div>
+            <Rank />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            <FaceRecognition
+              imageBorder={this.state.box}
+              imageSource={this.state.imageUrl}
+            />
+          </div>
+        )}
       </div>
-    )
-  };
+    );
+  }
 }
 
 export default App;
