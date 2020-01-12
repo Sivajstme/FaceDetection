@@ -103,13 +103,16 @@ class App extends Component {
             if (response) {
               fetch("http://localhost:3001/image", {
                 method: "put",
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   id: this.state.user.id
                 })
               })
-                .then(response => response.json)
-                .then(count => console.log(count));
+                .then(response => response.json())
+                //.then(data => console.log(data))
+                .then(data => this.setState(Object.assign(this.state.user,  {entries : data.entries})));
+                //.then(count => {this.setState(Object.assign(this.state.user, { entries : count}))});
+
             }
             this.borderBox(this.calculateFaceLocation(response))
       })
@@ -140,7 +143,8 @@ class App extends Component {
             <div>
               <Navigation onRouteChange={this.onRouteChange} />
               <Rank name = {this.state.user.name}
-                    entries = {this.state.user.entries}/>
+                    entry = {this.state.user.entries}
+              />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
