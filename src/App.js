@@ -52,7 +52,7 @@ class App extends Component {
   }
   
   calculateFaceLocation = dataInput => {
-    console.log("testes");
+    //console.log("testes");
     const clarifaiFace =
       dataInput.outputs[0].data.regions[0].region_info.bounding_box;
     //console.log(clarifaiFace);
@@ -60,7 +60,7 @@ class App extends Component {
     //console.log(img)
     let width = Number(img.width);
     let height = Number(img.height);
-    console.log(height, width); //Height = 441;
+    //console.log(height, width); //Height = 441;
     //width = 500;
     /**
     top_row: 0.15593769,
@@ -84,7 +84,7 @@ class App extends Component {
           joined: data.joined
         }
     })
-    console.log(this.state);
+
   }
   borderBox = border => {
     //console.log(border);
@@ -95,7 +95,7 @@ class App extends Component {
     this.setState({ input: e.target.value });
   };
   onButtonSubmit = () => {
-    console.log("Click");
+    //console.log("Click");
     this.setState({ imageUrl: this.state.input });
     API.models
       .predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
@@ -108,9 +108,16 @@ class App extends Component {
                   id: this.state.user.id
                 })
               })
+                //.then(response => console.log(response.json()))
                 .then(response => response.json())
                 //.then(data => console.log(data))
-                .then(data => this.setState(Object.assign(this.state.user,  {entries : data.entries})));
+                .then(data =>{
+                  //console.log(data);
+                  this.setState(
+                    Object.assign(this.state.user, { entries: data})
+                  )
+                }
+                );
                 //.then(count => {this.setState(Object.assign(this.state.user, { entries : count}))});
 
             }
