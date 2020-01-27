@@ -1,5 +1,6 @@
 import React from 'react';
-
+import Error from '../ErrorLogin/Error';
+import './Signin.css';
 class Signin extends React.Component{
     
     constructor(props){
@@ -9,8 +10,10 @@ class Signin extends React.Component{
             signInPassword : '',
             isCorrect : false
         };
+    };
+    onError = (e) => {
+        
     }
-
     onEmailChange = (e)=>{
         this.setState({signInEmail : e.target.value});
     }
@@ -18,26 +21,24 @@ class Signin extends React.Component{
         this.setState({ signInPassword: e.target.value });
     }
     onSubmitSignIn = ()=>{
-        fetch("http://localhost:3001/signin", {
-            method : 'post',
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify({
-                email : this.state.signInEmail,
-                password : this.state.signInPassword
+        fetch("https://damp-headland-67030.herokuapp.com/signin", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            email: this.state.signInEmail,
+            password: this.state.signInPassword
             })
         })
         .then(response => response.json())
-        .then((data) => {
-            if(data){
-
-                this.props.loadUser(data);
-                this.props.onRouteChange("home");
-                
+        .then(data => {
+            if (data.id) {
+            this.props.loadUser(data);
+            this.props.onRouteChange("home");
             }else{
-                console.log("Wrong Password");
+                this.setState({isCorrect : true});
             }
-        
         })
+       // .catch(err => { return 1});
         /*
             .then(res => res.json())
             .then(
@@ -92,6 +93,12 @@ class Signin extends React.Component{
                                     value="Sign in"
                             onClick={this.onSubmitSignIn}/>
                         </div>
+                        {
+                            this.state.isCorrect === true ?
+                            <Error /> : 
+                            <div></div>
+                        }
+                    
                         <div className="lh-copy mt3">
                                 <p onClick={() => onRouteChange('register')} href="#0" className="f6 link dim black db">Register</p>
                         </div>

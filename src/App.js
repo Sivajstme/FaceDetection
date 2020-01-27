@@ -12,7 +12,6 @@ import Register from './components/Register/Register';
 
 
 
-
 const particlesOption = {
   particles: {
     number :{
@@ -52,7 +51,7 @@ class App extends Component {
   }
   
   calculateFaceLocation = dataInput => {
-    console.log("testes");
+    //console.log("testes");
     const clarifaiFace =
       dataInput.outputs[0].data.regions[0].region_info.bounding_box;
     //console.log(clarifaiFace);
@@ -60,7 +59,7 @@ class App extends Component {
     //console.log(img)
     let width = Number(img.width);
     let height = Number(img.height);
-    console.log(height, width); //Height = 441;
+    //console.log(height, width); //Height = 441;
     //width = 500;
     /**
     top_row: 0.15593769,
@@ -84,7 +83,7 @@ class App extends Component {
           joined: data.joined
         }
     })
-    console.log(this.state);
+
   }
   borderBox = border => {
     //console.log(border);
@@ -95,21 +94,30 @@ class App extends Component {
     this.setState({ input: e.target.value });
   };
   onButtonSubmit = () => {
-    console.log("Click");
+    //console.log("Click");
     this.setState({ imageUrl: this.state.input });
     API.models
       .predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
       .then(response => {
             if (response) {
-              fetch("http://localhost:3001/image", {
+              fetch("https://damp-headland-67030.herokuapp.com/image", {
                 method: "put",
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   id: this.state.user.id
                 })
               })
-                .then(response => response.json)
-                .then(count => console.log(count));
+                //.then(response => console.log(response.json()))
+                .then(response => response.json())
+                //.then(data => console.log(data))
+                .then(data => {
+                  //console.log(data);
+                  this.setState(
+                    Object.assign(this.state.user, { entries: data })
+                  );
+                });
+                //.then(count => {this.setState(Object.assign(this.state.user, { entries : count}))});
+
             }
             this.borderBox(this.calculateFaceLocation(response))
       })
@@ -138,9 +146,12 @@ class App extends Component {
         {this.state.route === "home" ? (
           (
             <div>
-              <Navigation onRouteChange={this.onRouteChange} />
+              <Navigation onRouteChange={this.onRouteChange}
+                          name = {'SignOut'} />
+                          
               <Rank name = {this.state.user.name}
-                    entries = {this.state.user.entries}/>
+                    entry = {this.state.user.entries}
+              />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
@@ -154,7 +165,12 @@ class App extends Component {
         ) :
           (
             this.state.route === 'signin' ?
-            <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> :
+            <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> 
+            
+      
+            // (this.state.route === 'Error') ? <div/> : <div>
+            :
+
             <Register loadUser = {this.loadUser} onRouteChange={this.onRouteChange} />
           )
         
