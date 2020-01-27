@@ -12,7 +12,6 @@ import Register from './components/Register/Register';
 
 
 
-
 const particlesOption = {
   particles: {
     number :{
@@ -101,7 +100,7 @@ class App extends Component {
       .predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
       .then(response => {
             if (response) {
-              fetch("http://localhost:3001/image", {
+              fetch("https://damp-headland-67030.herokuapp.com/image", {
                 method: "put",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -111,13 +110,12 @@ class App extends Component {
                 //.then(response => console.log(response.json()))
                 .then(response => response.json())
                 //.then(data => console.log(data))
-                .then(data =>{
+                .then(data => {
                   //console.log(data);
                   this.setState(
-                    Object.assign(this.state.user, { entries: data})
-                  )
-                }
-                );
+                    Object.assign(this.state.user, { entries: data })
+                  );
+                });
                 //.then(count => {this.setState(Object.assign(this.state.user, { entries : count}))});
 
             }
@@ -148,7 +146,9 @@ class App extends Component {
         {this.state.route === "home" ? (
           (
             <div>
-              <Navigation onRouteChange={this.onRouteChange} />
+              <Navigation onRouteChange={this.onRouteChange}
+                          name = {'SignOut'} />
+                          
               <Rank name = {this.state.user.name}
                     entry = {this.state.user.entries}
               />
@@ -165,7 +165,12 @@ class App extends Component {
         ) :
           (
             this.state.route === 'signin' ?
-            <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> :
+            <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> 
+            
+      
+            // (this.state.route === 'Error') ? <div/> : <div>
+            :
+
             <Register loadUser = {this.loadUser} onRouteChange={this.onRouteChange} />
           )
         

@@ -1,5 +1,5 @@
 import React from 'react';
-
+//import Navigation from './components/Navigation/Navigation'
 class Register extends React.Component {
     
     constructor(props){
@@ -26,7 +26,7 @@ class Register extends React.Component {
 
     onRegisterUser = (e) =>{
 
-        fetch("http://localhost:3001/register",{
+        fetch("https://damp-headland-67030.herokuapp.com/register",{
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -46,10 +46,15 @@ class Register extends React.Component {
         //console.log(this.state);
         
     }
+    Change = (e) =>{
+        this.props.onRouteChange("signin");
+    }
     
     render(){
         //const {onRouteChange} = this.props;
         return (
+            
+            
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
             <main className="pa4 black-80">
                 <div className="measure">
@@ -86,12 +91,12 @@ class Register extends React.Component {
                             value="Register"
                             onClick={this.onRegisterUser} />
                     </div>
-                    <div className="lh-copy mt3">
-                    </div>
+                        <div className="lh-copy mt3" onClick={this.Change} >
+                            Cancel
+                        </div>
                 </div>
             </main>
         </article>
-
     );
 
     }
